@@ -5,10 +5,7 @@
  */
 package tags;
 
-import static java.lang.Math.E;
-import java.net.URL;
 import java.util.Enumeration;
-import javax.lang.model.element.Element;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -20,19 +17,27 @@ public class Debug extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        Enumeration<String> names = pageContext.getRequest().getParameterNames();
-        
-        for (Enumeration e = names; e.hasMoreElements();) {
-        if (e.nextElement().equals("debug")) {
-            return EVAL_BODY_INCLUDE;
+        String serverName = pageContext.getRequest().getServerName();
+        String firstWordServerName = "";
+        try
+        {
+            firstWordServerName = serverName.substring(0, serverName.indexOf("."));
+        }
+        catch (StringIndexOutOfBoundsException e)
+        {
+
+        }
+        if (firstWordServerName.equals("test") || serverName.equals("localhost"))
+        {
+            Enumeration<String> names = pageContext.getRequest().getParameterNames();
+            for (Enumeration e = names; e.hasMoreElements();)
+            {
+                if (e.nextElement().equals("debug"))
+                {
+                    return EVAL_BODY_INCLUDE;
+                }
             }
         }
         return SKIP_BODY;
-
     }
-
 }
-
-//        String myURL = pageContext.getRequest().getServletContext().getContextPath();
-//        URL url = new URL(myURL);
-//        String query = url.getQuery();
